@@ -14,4 +14,23 @@
        var str = "Today you are you" 
        console.log("Reversed string: " + str.split("").reverse().join(""));
     </script>
+
+    11/4/25 -Leap Years
+    <script>
+        const currentYear = new Date().getFullYear();
+        function isLeapYear(year) {
+            return (year % 400 == 0) || (year % 4 == 0 && year % 100 !== 0);
+        }
+        
+        const leapYears = [];
+        
+        for (let year = 1900; year <= currentYear; year++) {
+            if (isLeapYear(year)) {
+                leapYears.push(year);
+            }
+        }
+        
+        console.log("Leap years from 1900 to " + currentYear + ":");
+        console.log(leapYears);
+    </script>
 </html>
