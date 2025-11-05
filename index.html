@@ -33,4 +33,25 @@
         console.log("Leap years from 1900 to " + currentYear + ":");
         console.log(leapYears);
     </script>
+
+
+    <p>11/5/25 -Ceaser Cipher</p>
+    
+    <script>
+        var shift = 3;
+        var message = "helloworld";
+        var alphabet = "abcdefghijklmnopqrstuvwxyz";
+        var encryptedMessage = "";
+        
+        for (var i = 0; i < message.length; i++) {
+            var char = message[i];
+            var index = alphabet.indexOf(char);
+            if (index !== -1) {
+                var newIndex = (index + shift);
+                encryptedMessage += alphabet[newIndex];
+            } 
+        }
+        console.log(encryptedMessage);
+
+    </script>
 </html>
