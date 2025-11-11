@@ -73,4 +73,20 @@
         console.log(encryptedMessage);
 
     </script>
+
+    11/11/25 -is input in DOM prime?
+    <input type="number" id="input">
+    <button onclick="isPrime()">Check if Prime</button>
+    <p id="result"></p>
+    <script>
+        function isPrime() {
+            var input = document.getElementById("input").value;
+            if (input % 2 === 0) {
+                document.getElementById("result").innerHTML = "Prime";
+            }
+            else {
+                document.getElementById("result").innerHTML = "Not Prime";
+            }
+        }
+    </script>
 </html>
