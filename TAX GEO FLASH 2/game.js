@@ -92,28 +92,48 @@ function startGame() {
     obstacles = [];
     powerUps = [];
     score = 0;
+    baseSpeed = 6;
     gameSpeed = baseSpeed;
     slowDownActive = false;
     
-    // Create initial obstacles for Stereo Maxness
+    // Create initial obstacles for Stereo Maxness with variety
     createObstacle(600);
     createObstacle(1000);
     createObstacle(1400);
     createObstacle(1800);
+    createObstacle(2200);
     
     // Create power-up
     createPowerUp(800);
 }
 
-// Create obstacle
+// Create obstacle with variety
 function createObstacle(x) {
-    obstacles.push({
+    const types = ['ground', 'ground', 'ground', 'floating', 'tall'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    
+    let obstacle = {
         x: x,
-        y: groundY,
         width: 40,
         height: 40,
         type: 'block'
-    });
+    };
+    
+    if (type === 'ground') {
+        // Normal ground obstacle
+        obstacle.y = groundY;
+        obstacle.height = 40;
+    } else if (type === 'tall') {
+        // Tall ground obstacle
+        obstacle.y = groundY;
+        obstacle.height = 60;
+    } else if (type === 'floating') {
+        // Floating obstacle above ground
+        obstacle.y = groundY - 80;
+        obstacle.height = 40;
+    }
+    
+    obstacles.push(obstacle);
 }
 
 // Create power-up
@@ -205,6 +225,12 @@ function drawLevelSelect() {
 function update() {
     if (gameState !== STATE_PLAYING) return;
     
+    // Gradually increase speed based on score (but not during slow down)
+    if (!slowDownActive) {
+        baseSpeed = 6 + Math.floor(score / 10) * 0.5; // Speed increases every 10 points
+        gameSpeed = baseSpeed;
+    }
+    
     // Update slow down power-up (only affects obstacle/power-up movement, not player physics)
     if (slowDownActive) {
         slowDownTimer--;
@@ -236,10 +262,11 @@ function update() {
         if (obstacles[i].x + obstacles[i].width < 0) {
             obstacles.splice(i, 1);
             score++;
-            // Create new obstacle
-            if (obstacles.length < 4) {
+            // Create new obstacle with varied spacing
+            if (obstacles.length < 5) {
                 const lastX = obstacles.length > 0 ? obstacles[obstacles.length - 1].x : 600;
-                createObstacle(lastX + 400);
+                const spacing = 300 + Math.random() * 200; // Varied spacing between 300-500
+                createObstacle(lastX + spacing);
             }
         } else {
             // Collision detection
@@ -295,7 +322,7 @@ function checkPowerUpCollision(player, powerUp) {
     return distance < (player.size / 2 + powerUp.size / 2);
 }
 
-// Reset game
+    // Reset game
 function resetGame() {
     gameState = STATE_LEVEL_SELECT;
     player.y = groundY - 30;
@@ -303,6 +330,7 @@ function resetGame() {
     obstacles = [];
     powerUps = [];
     score = 0;
+    baseSpeed = 6;
     gameSpeed = baseSpeed;
     slowDownActive = false;
 }
