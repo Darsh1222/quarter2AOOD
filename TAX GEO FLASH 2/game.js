@@ -44,8 +44,8 @@ const levels = [
 let selectedLevel = 0;
 
 // Game variables
-let gameSpeed = 8; // Increased base speed
-let baseSpeed = 8;
+let gameSpeed = 4;
+let baseSpeed = 4;
 let score = 0;
 const groundY = canvas.height - 100;
 
@@ -102,7 +102,7 @@ function startGame() {
     platforms = [];
     score = 0;
     coinsCollected = 0;
-    baseSpeed = 8; // Increased base speed (HARDER)
+    baseSpeed = 4; 
     gameSpeed = baseSpeed;
     slowDownActive = false;
     
@@ -363,7 +363,7 @@ function update() {
     
     // Gradually increase speed based on score (but not during slow down) - HARDER
     if (!slowDownActive) {
-        baseSpeed = 8 + Math.floor(score / 5) * 0.8; // Speed increases faster (every 5 points, +0.8)
+        baseSpeed = 4 + Math.floor(score / 10) * 0.4; // Speed increases slower (every 10 points, +0.4)
         gameSpeed = baseSpeed;
     }
     
@@ -631,7 +631,7 @@ function resetGame() {
     // Reset game state
     score = 0;
     coinsCollected = 0;
-    baseSpeed = 8; // Increased base speed (HARDER)
+    baseSpeed = 4; // Base speed
     gameSpeed = baseSpeed;
     slowDownActive = false;
     
