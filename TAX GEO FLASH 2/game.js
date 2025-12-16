@@ -492,7 +492,8 @@ function update() {
     // Only update game logic when playing
     if (gameState !== STATE_PLAYING) return;
     
-    // Gradually increase speed based on score (but not during slow down) - HARDER
+    // Gradually increase speed based on score (but not during slow down)
+    // Speed increases progressively to maintain challenge as player improves
     if (!slowDownActive) {
         baseSpeed = 4 + Math.floor(score / 10) * 0.4; // Speed increases slower (every 10 points, +0.4)
         gameSpeed = baseSpeed;
