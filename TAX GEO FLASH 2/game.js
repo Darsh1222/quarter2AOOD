@@ -489,6 +489,7 @@ function drawLevelSelect() {
 
 // Update game state
 function update() {
+    // Only update game logic when playing
     if (gameState !== STATE_PLAYING) return;
     
     // Gradually increase speed based on score (but not during slow down) - HARDER
