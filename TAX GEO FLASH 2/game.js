@@ -1081,7 +1081,7 @@ function drawGame() {
     ctx.fillText('Score: ' + score, 20, 42);
     ctx.fillStyle = '#ffd700';
     ctx.font = 'bold 22px "Segoe UI", Arial, sans-serif';
-    ctx.fillText('Coins: ' + coinsCollected, 20, 68);
+    ctx.fillText('Coins: ' + coinsCollected, 20, 70);
     ctx.shadowBlur = 0;
     
     // Draw slow down indicator with glow
@@ -1091,7 +1091,7 @@ function drawGame() {
         ctx.shadowBlur = 15 + pulse;
         ctx.fillStyle = '#ffff00';
         ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
-        ctx.fillText('SLOW DOWN!', 20, 95);
+        ctx.fillText('SLOW DOWN!', 20, 97);
         ctx.shadowBlur = 0;
     }
     
@@ -1102,7 +1102,7 @@ function drawGame() {
         ctx.shadowBlur = 15 + pulse;
         ctx.fillStyle = '#9966ff';
         ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
-        ctx.fillText('DOUBLE JUMP!', 20, slowDownActive ? 120 : 95);
+        ctx.fillText('DOUBLE JUMP!', 20, slowDownActive ? 122 : 97);
         ctx.shadowBlur = 0;
     }
 }
