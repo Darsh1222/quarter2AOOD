@@ -113,57 +113,73 @@ function startGame() {
     player.hasDoubleJumped = false;
     
     
-    // Constructed level - easier platforming path with clear progression
-    // Section 1: Starting platforms (easy, close together)
+    // Structured level design with consistent patterns and clear sections
+    // All platforms are 100px wide, spaced 200px apart for consistency
+    
+    // SECTION 1: Tutorial/Warm-up (3 platforms, no threats)
     createPlatform(600, groundY - 100, 100);
-    createPlatform(750, groundY - 105, 100);
-    createPlatform(900, groundY - 100, 100);
-    
-    // Fewer spikes - only one between platforms
-    createFloatingSpike(825, groundY - 50); // Single spike, low threat
-    
-    // Section 2: Slightly higher platforms with double jump power-up
-    createPlatform(1100, groundY - 120, 100);
-    createDoubleJumpPowerUp(1140, groundY - 150); // ON the platform
-    createPlatform(1300, groundY - 115, 100);
-    createPlatform(1500, groundY - 120, 100);
-    
-    // Minimal spikes - only one threat
-    createFloatingSpike(1200, groundY - 60);
-    
-    // Section 3: Consistent platforming path
-    createPlatform(1700, groundY - 125, 100);
-    createPlatform(1900, groundY - 120, 100);
-    createDoubleJumpPowerUp(1940, groundY - 150); // ON the platform
-    createPlatform(2100, groundY - 115, 100);
-    
-    // One spike in this section
-    createFloatingSpike(1800, groundY - 70);
-    
-    // Section 4: Continued platforming
-    createPlatform(2300, groundY - 120, 100);
-    createPlatform(2500, groundY - 125, 100);
-    createDoubleJumpPowerUp(2540, groundY - 155); // ON the platform
-    createPlatform(2700, groundY - 120, 100);
-    
-    // Minimal spikes
-    createFloatingSpike(2400, groundY - 70);
-    
-    // Section 5: Final section (still playable)
-    createPlatform(2900, groundY - 130, 100);
-    createPlatform(3100, groundY - 125, 100);
-    createFloatingSpike(3000, groundY - 75);
-    
-    // Add coins positioned near platforms (easier to collect)
+    createPlatform(800, groundY - 100, 100);
+    createPlatform(1000, groundY - 100, 100);
     createCoin(630, groundY - 130);
-    createCoin(1130, groundY - 150);
-    createCoin(1520, groundY - 150);
-    createCoin(1920, groundY - 150);
-    createCoin(2320, groundY - 150);
-    createCoin(2520, groundY - 160);
+    createCoin(830, groundY - 130);
     
-    // Slow down power-up (ground level)
-    createPowerUp(800);
+    // SECTION 2: Introduction to spikes (4 platforms, 2 spikes)
+    createPlatform(1200, groundY - 110, 100);
+    createFloatingSpike(1300, groundY - 60); // First spike threat
+    createPlatform(1400, groundY - 110, 100);
+    createPlatform(1600, groundY - 110, 100);
+    createFloatingSpike(1700, groundY - 60);
+    createPlatform(1800, groundY - 110, 100);
+    createCoin(1230, groundY - 140);
+    createCoin(1630, groundY - 140);
+    
+    // SECTION 3: Double jump introduction (4 platforms, 1 power-up)
+    createPlatform(2000, groundY - 120, 100);
+    createDoubleJumpPowerUp(2040, groundY - 150); // First double jump
+    createPlatform(2200, groundY - 120, 100);
+    createPlatform(2400, groundY - 120, 100);
+    createPlatform(2600, groundY - 120, 100);
+    createCoin(2030, groundY - 150);
+    createCoin(2430, groundY - 150);
+    
+    // SECTION 4: Higher platforms with spikes (5 platforms, 3 spikes)
+    createPlatform(2800, groundY - 130, 100);
+    createFloatingSpike(2900, groundY - 70);
+    createPlatform(3000, groundY - 130, 100);
+    createPlatform(3200, groundY - 130, 100);
+    createFloatingSpike(3300, groundY - 70);
+    createPlatform(3400, groundY - 130, 100);
+    createFloatingSpike(3500, groundY - 70);
+    createPlatform(3600, groundY - 130, 100);
+    createCoin(2830, groundY - 160);
+    createCoin(3230, groundY - 160);
+    
+    // SECTION 5: Double jump section (4 platforms, 1 power-up, 2 spikes)
+    createPlatform(3800, groundY - 140, 100);
+    createDoubleJumpPowerUp(3840, groundY - 170);
+    createFloatingSpike(3900, groundY - 80);
+    createPlatform(4000, groundY - 140, 100);
+    createPlatform(4200, groundY - 140, 100);
+    createFloatingSpike(4300, groundY - 80);
+    createPlatform(4400, groundY - 140, 100);
+    createCoin(3830, groundY - 170);
+    createCoin(4230, groundY - 170);
+    
+    // SECTION 6: Final challenge (5 platforms, 3 spikes, 1 power-up)
+    createPlatform(4600, groundY - 130, 100);
+    createFloatingSpike(4700, groundY - 70);
+    createPlatform(4800, groundY - 130, 100);
+    createPlatform(5000, groundY - 130, 100);
+    createDoubleJumpPowerUp(5040, groundY - 160);
+    createFloatingSpike(5100, groundY - 70);
+    createPlatform(5200, groundY - 130, 100);
+    createFloatingSpike(5300, groundY - 70);
+    createPlatform(5400, groundY - 130, 100);
+    createCoin(4830, groundY - 160);
+    createCoin(5230, groundY - 160);
+    
+    // Slow down power-up (ground level, early in level)
+    createPowerUp(700);
 }
 
 // Create obstacle with variety
@@ -783,57 +799,73 @@ function resetGame() {
     doubleJumpActive = false;
     player.hasDoubleJumped = false;
     
-    // Constructed level - easier platforming path with clear progression
-    // Section 1: Starting platforms (easy, close together)
+    // Structured level design with consistent patterns and clear sections
+    // All platforms are 100px wide, spaced 200px apart for consistency
+    
+    // SECTION 1: Tutorial/Warm-up (3 platforms, no threats)
     createPlatform(600, groundY - 100, 100);
-    createPlatform(750, groundY - 105, 100);
-    createPlatform(900, groundY - 100, 100);
-    
-    // Fewer spikes - only one between platforms
-    createFloatingSpike(825, groundY - 50); // Single spike, low threat
-    
-    // Section 2: Slightly higher platforms with double jump power-up
-    createPlatform(1100, groundY - 120, 100);
-    createDoubleJumpPowerUp(1140, groundY - 150); // ON the platform
-    createPlatform(1300, groundY - 115, 100);
-    createPlatform(1500, groundY - 120, 100);
-    
-    // Minimal spikes - only one threat
-    createFloatingSpike(1200, groundY - 60);
-    
-    // Section 3: Consistent platforming path
-    createPlatform(1700, groundY - 125, 100);
-    createPlatform(1900, groundY - 120, 100);
-    createDoubleJumpPowerUp(1940, groundY - 150); // ON the platform
-    createPlatform(2100, groundY - 115, 100);
-    
-    // One spike in this section
-    createFloatingSpike(1800, groundY - 70);
-    
-    // Section 4: Continued platforming
-    createPlatform(2300, groundY - 120, 100);
-    createPlatform(2500, groundY - 125, 100);
-    createDoubleJumpPowerUp(2540, groundY - 155); // ON the platform
-    createPlatform(2700, groundY - 120, 100);
-    
-    // Minimal spikes
-    createFloatingSpike(2400, groundY - 70);
-    
-    // Section 5: Final section (still playable)
-    createPlatform(2900, groundY - 130, 100);
-    createPlatform(3100, groundY - 125, 100);
-    createFloatingSpike(3000, groundY - 75);
-    
-    // Add coins positioned near platforms (easier to collect)
+    createPlatform(800, groundY - 100, 100);
+    createPlatform(1000, groundY - 100, 100);
     createCoin(630, groundY - 130);
-    createCoin(1130, groundY - 150);
-    createCoin(1520, groundY - 150);
-    createCoin(1920, groundY - 150);
-    createCoin(2320, groundY - 150);
-    createCoin(2520, groundY - 160);
+    createCoin(830, groundY - 130);
     
-    // Slow down power-up (ground level)
-    createPowerUp(800);
+    // SECTION 2: Introduction to spikes (4 platforms, 2 spikes)
+    createPlatform(1200, groundY - 110, 100);
+    createFloatingSpike(1300, groundY - 60); // First spike threat
+    createPlatform(1400, groundY - 110, 100);
+    createPlatform(1600, groundY - 110, 100);
+    createFloatingSpike(1700, groundY - 60);
+    createPlatform(1800, groundY - 110, 100);
+    createCoin(1230, groundY - 140);
+    createCoin(1630, groundY - 140);
+    
+    // SECTION 3: Double jump introduction (4 platforms, 1 power-up)
+    createPlatform(2000, groundY - 120, 100);
+    createDoubleJumpPowerUp(2040, groundY - 150); // First double jump
+    createPlatform(2200, groundY - 120, 100);
+    createPlatform(2400, groundY - 120, 100);
+    createPlatform(2600, groundY - 120, 100);
+    createCoin(2030, groundY - 150);
+    createCoin(2430, groundY - 150);
+    
+    // SECTION 4: Higher platforms with spikes (5 platforms, 3 spikes)
+    createPlatform(2800, groundY - 130, 100);
+    createFloatingSpike(2900, groundY - 70);
+    createPlatform(3000, groundY - 130, 100);
+    createPlatform(3200, groundY - 130, 100);
+    createFloatingSpike(3300, groundY - 70);
+    createPlatform(3400, groundY - 130, 100);
+    createFloatingSpike(3500, groundY - 70);
+    createPlatform(3600, groundY - 130, 100);
+    createCoin(2830, groundY - 160);
+    createCoin(3230, groundY - 160);
+    
+    // SECTION 5: Double jump section (4 platforms, 1 power-up, 2 spikes)
+    createPlatform(3800, groundY - 140, 100);
+    createDoubleJumpPowerUp(3840, groundY - 170);
+    createFloatingSpike(3900, groundY - 80);
+    createPlatform(4000, groundY - 140, 100);
+    createPlatform(4200, groundY - 140, 100);
+    createFloatingSpike(4300, groundY - 80);
+    createPlatform(4400, groundY - 140, 100);
+    createCoin(3830, groundY - 170);
+    createCoin(4230, groundY - 170);
+    
+    // SECTION 6: Final challenge (5 platforms, 3 spikes, 1 power-up)
+    createPlatform(4600, groundY - 130, 100);
+    createFloatingSpike(4700, groundY - 70);
+    createPlatform(4800, groundY - 130, 100);
+    createPlatform(5000, groundY - 130, 100);
+    createDoubleJumpPowerUp(5040, groundY - 160);
+    createFloatingSpike(5100, groundY - 70);
+    createPlatform(5200, groundY - 130, 100);
+    createFloatingSpike(5300, groundY - 70);
+    createPlatform(5400, groundY - 130, 100);
+    createCoin(4830, groundY - 160);
+    createCoin(5230, groundY - 160);
+    
+    // Slow down power-up (ground level, early in level)
+    createPowerUp(700);
 }
 
 // Draw player
