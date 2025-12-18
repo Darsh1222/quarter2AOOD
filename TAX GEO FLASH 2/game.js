@@ -80,6 +80,11 @@ let coinsCollected = 0;
 // Platforms (blue blocks you can jump on)
 let platforms = [];
 
+// Death feedback
+let deathFlash = 0;
+let deathShakeX = 0;
+let deathShakeY = 0;
+
 // Initialize game
 function init() {
     // Event listeners
@@ -111,6 +116,9 @@ function startGame() {
     slowDownActive = false;
     doubleJumpActive = false;
     player.hasDoubleJumped = false;
+    deathFlash = 0;
+    deathShakeX = 0;
+    deathShakeY = 0;
     
     
     // Structured level design with consistent patterns and clear sections
@@ -528,6 +536,22 @@ function update() {
         }
     }
     
+    // Update death feedback effects
+    if (deathFlash > 0) {
+        deathFlash -= 2;
+        // Screen shake effect (stronger at start, fades out)
+        const shakeIntensity = deathFlash / 30;
+        deathShakeX = (Math.random() - 0.5) * 15 * shakeIntensity;
+        deathShakeY = (Math.random() - 0.5) * 15 * shakeIntensity;
+        
+        // Reset game after flash effect completes
+        if (deathFlash <= 0) {
+            resetGame();
+            deathShakeX = 0;
+            deathShakeY = 0;
+        }
+    }
+    
     // Update player (player physics are independent of gameSpeed - jump and gravity stay constant)
     player.velocityY += player.gravity;
     player.y += player.velocityY;
@@ -620,7 +644,11 @@ function update() {
         } else {
             // Collision detection
             if (checkCollision(player, obstacles[i])) {
-                resetGame();
+                // Trigger death feedback (flash and shake)
+                deathFlash = 40; // Flash duration (slightly longer for better feedback)
+                deathShakeX = 0;
+                deathShakeY = 0;
+                // Don't reset immediately - let the flash/shake effect play
             }
         }
     }
@@ -798,6 +826,9 @@ function resetGame() {
     slowDownActive = false;
     doubleJumpActive = false;
     player.hasDoubleJumped = false;
+    deathFlash = 0;
+    deathShakeX = 0;
+    deathShakeY = 0;
     
     // Structured level design with consistent patterns and clear sections
     // All platforms are 100px wide, spaced 200px apart for consistency
@@ -901,6 +932,10 @@ function drawPlayer() {
 
 // Draw gameplay
 function drawGame() {
+    // Apply screen shake effect if death occurred
+    ctx.save();
+    ctx.translate(deathShakeX, deathShakeY);
+    
     // Clear canvas
     ctx.fillStyle = currentTheme.bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -1131,6 +1166,22 @@ function drawGame() {
         ctx.fillText('DOUBLE JUMP!', 20, slowDownActive ? 122 : 97);
         ctx.shadowBlur = 0;
     }
+    
+    // Death flash effect (red screen flash)
+    if (deathFlash > 0) {
+        const flashAlpha = deathFlash / 40; // Fade from 1 to 0
+        // Red flash overlay that fades out
+        ctx.fillStyle = `rgba(255, 50, 50, ${flashAlpha * 0.7})`;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // White flash for impact
+        if (flashAlpha > 0.8) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${(flashAlpha - 0.8) * 5 * 0.3})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+    
+    // Restore context (remove shake transform)
+    ctx.restore();
 }
 
 // Draw function
