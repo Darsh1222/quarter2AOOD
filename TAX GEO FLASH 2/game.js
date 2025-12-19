@@ -9,8 +9,10 @@ canvas.height = 600;
 const STATE_MENU = 'menu';
 const STATE_LEVEL_SELECT = 'levelSelect';
 const STATE_PLAYING = 'playing';
+const STATE_PAUSED = 'paused';
 
 let gameState = STATE_MENU;
+let isPaused = false;
 
 // Themes
 const themes = {
@@ -47,7 +49,14 @@ let selectedLevel = 0;
 let gameSpeed = 4;
 let baseSpeed = 4;
 let score = 0;
+let distance = 0;
+let highScore = 0;
 const groundY = canvas.height - 100;
+
+// Load high score from localStorage
+if (typeof Storage !== 'undefined') {
+    highScore = parseInt(localStorage.getItem('geoTaxFlash2HighScore')) || 0;
+}
 
 // Player
 const player = {
@@ -110,6 +119,7 @@ function startGame() {
     coins = [];
     platforms = [];
     score = 0;
+    distance = 0;
     coinsCollected = 0;
     baseSpeed = 4; 
     gameSpeed = baseSpeed;
@@ -119,6 +129,7 @@ function startGame() {
     deathFlash = 0;
     deathShakeX = 0;
     deathShakeY = 0;
+    isPaused = false;
     
     
     // Structured level design with consistent patterns and clear sections
@@ -329,16 +340,20 @@ function handleClick(e) {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    if (gameState === STATE_MENU) {
-        if (x >= 300 && x <= 500 && y >= 350 && y <= 400) {
+    if (gameState === STATE_PAUSED) {
+        // Unpause on click
+        isPaused = false;
+        gameState = STATE_PLAYING;
+    } else if (gameState === STATE_MENU) {
+        if (x >= 300 && x <= 500 && y >= 350 && y <= 410) {
             gameState = STATE_LEVEL_SELECT;
         }
     } else if (gameState === STATE_LEVEL_SELECT) {
-        if (x >= 300 && x <= 500 && y >= 250 && y <= 300) {
+        if (x >= 300 && x <= 500 && y >= 250 && y <= 310) {
             selectedLevel = 0;
             startGame();
         }
-    } else if (gameState === STATE_PLAYING) {
+    } else if (gameState === STATE_PLAYING && !isPaused) {
         // Jump on click
         if (player.onGround) {
             player.velocityY = player.jumpPower;
@@ -354,16 +369,32 @@ function handleClick(e) {
 
 // Handle key press
 function handleKeyPress(e) {
-    if (gameState === STATE_PLAYING && e.code === 'Space') {
-        e.preventDefault();
-        if (player.onGround) {
-            player.velocityY = player.jumpPower;
-            player.onGround = false;
-            player.hasDoubleJumped = false;
-        } else if (doubleJumpActive && !player.hasDoubleJumped) {
-            // Double jump
-            player.velocityY = player.jumpPower;
-            player.hasDoubleJumped = true;
+    if (gameState === STATE_PLAYING) {
+        // Pause/unpause with P key
+        if (e.code === 'KeyP' || e.code === 'Escape') {
+            e.preventDefault();
+            isPaused = !isPaused;
+            gameState = isPaused ? STATE_PAUSED : STATE_PLAYING;
+        }
+        // Jump with space
+        if (e.code === 'Space' && !isPaused) {
+            e.preventDefault();
+            if (player.onGround) {
+                player.velocityY = player.jumpPower;
+                player.onGround = false;
+                player.hasDoubleJumped = false;
+            } else if (doubleJumpActive && !player.hasDoubleJumped) {
+                // Double jump
+                player.velocityY = player.jumpPower;
+                player.hasDoubleJumped = true;
+            }
+        }
+    } else if (gameState === STATE_PAUSED) {
+        // Unpause
+        if (e.code === 'KeyP' || e.code === 'Escape' || e.code === 'Space') {
+            e.preventDefault();
+            isPaused = false;
+            gameState = STATE_PLAYING;
         }
     }
 }
@@ -408,6 +439,19 @@ function drawMenu() {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
     ctx.font = '20px "Segoe UI", Arial, sans-serif';
     ctx.fillText('Geometry Dash Style Platformer', canvas.width / 2, 240);
+    
+    // High score
+    if (highScore > 0) {
+        ctx.fillStyle = '#ffd700';
+        ctx.font = 'bold 18px "Segoe UI", Arial, sans-serif';
+        ctx.fillText('Best Score: ' + highScore, canvas.width / 2, 270);
+    }
+    
+    // Instructions
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.font = '16px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('Press SPACE or CLICK to jump', canvas.width / 2, 310);
+    ctx.fillText('Press P to pause', canvas.width / 2, 330);
     
     // Play button with gradient and glow
     const buttonX = 300;
@@ -509,8 +553,11 @@ function drawLevelSelect() {
 
 // Update game state
 function update() {
-    // Only update game logic when playing
+    // Only update game logic when playing (not paused)
     if (gameState !== STATE_PLAYING) return;
+    
+    // Track distance traveled
+    distance += gameSpeed;
     
     // Gradually increase speed based on score (but not during slow down)
     // Speed increases progressively to maintain challenge as player improves
@@ -609,6 +656,13 @@ function update() {
         if (obstacles[i].x + obstacles[i].width < 0) {
             obstacles.splice(i, 1);
             score++;
+            // Update high score
+            if (score > highScore) {
+                highScore = score;
+                if (typeof Storage !== 'undefined') {
+                    localStorage.setItem('geoTaxFlash2HighScore', highScore.toString());
+                }
+            }
             // Create new obstacle with varied spacing (HARDER - more obstacles, tighter spacing)
             if (obstacles.length < 10) {
                 const lastX = obstacles.length > 0 ? obstacles[obstacles.length - 1].x : 600;
@@ -686,6 +740,13 @@ function update() {
             coins[i].collected = true;
             coinsCollected++;
             score += 5; // Bonus points for coins
+            // Update high score
+            if (score > highScore) {
+                highScore = score;
+                if (typeof Storage !== 'undefined') {
+                    localStorage.setItem('geoTaxFlash2HighScore', highScore.toString());
+                }
+            }
             coins.splice(i, 1);
         } else if (coins[i].x + coins[i].size < 0) {
             coins.splice(i, 1);
@@ -820,6 +881,7 @@ function resetGame() {
     
     // Reset game state
     score = 0;
+    distance = 0;
     coinsCollected = 0;
     baseSpeed = 4; // Base speed
     gameSpeed = baseSpeed;
@@ -829,6 +891,7 @@ function resetGame() {
     deathFlash = 0;
     deathShakeX = 0;
     deathShakeY = 0;
+    isPaused = false;
     
     // Structured level design with consistent patterns and clear sections
     // All platforms are 100px wide, spaced 200px apart for consistency
@@ -1143,6 +1206,12 @@ function drawGame() {
     ctx.fillStyle = '#ffd700';
     ctx.font = 'bold 22px "Segoe UI", Arial, sans-serif';
     ctx.fillText('Coins: ' + coinsCollected, 20, 70);
+    // Show high score during gameplay
+    if (highScore > 0) {
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.7)';
+        ctx.font = '18px "Segoe UI", Arial, sans-serif';
+        ctx.fillText('Best: ' + highScore, 20, 95);
+    }
     ctx.shadowBlur = 0;
     
     // Draw slow down indicator with glow
@@ -1184,6 +1253,32 @@ function drawGame() {
     ctx.restore();
 }
 
+// Draw pause screen
+function drawPause() {
+    // Draw semi-transparent overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Pause text
+    ctx.shadowColor = '#667eea';
+    ctx.shadowBlur = 30;
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 48px "Segoe UI", Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2 - 50);
+    ctx.shadowBlur = 0;
+    
+    // Instructions
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.font = '20px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('Press P or ESC to resume', canvas.width / 2, canvas.height / 2 + 20);
+    
+    // Show current score
+    ctx.fillStyle = '#ffd700';
+    ctx.font = 'bold 24px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('Score: ' + score, canvas.width / 2, canvas.height / 2 + 60);
+}
+
 // Draw function
 function draw() {
     if (gameState === STATE_MENU) {
@@ -1192,6 +1287,10 @@ function draw() {
         drawLevelSelect();
     } else if (gameState === STATE_PLAYING) {
         drawGame();
+    } else if (gameState === STATE_PAUSED) {
+        // Draw game in background, then pause overlay
+        drawGame();
+        drawPause();
     }
 }
 
