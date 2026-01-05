@@ -345,7 +345,7 @@ function handleClick(e) {
         isPaused = false;
         gameState = STATE_PLAYING;
     } else if (gameState === STATE_MENU) {
-        if (x >= 300 && x <= 500 && y >= 350 && y <= 410) {
+        if (x >= 300 && x <= 500 && y >= 500 && y <= 560) {
             gameState = STATE_LEVEL_SELECT;
         }
     } else if (gameState === STATE_LEVEL_SELECT) {
@@ -440,22 +440,40 @@ function drawMenu() {
     ctx.font = '20px "Segoe UI", Arial, sans-serif';
     ctx.fillText('Geometry Dash Style Platformer', canvas.width / 2, 240);
     
+    // Game Purpose/Objective
+    ctx.fillStyle = '#00ff88';
+    ctx.font = 'bold 18px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('OBJECTIVE: Survive as long as possible!', canvas.width / 2, 270);
+    
+    // Game Rules Section
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.font = 'bold 16px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('GAME RULES:', canvas.width / 2, 300);
+    
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.font = '14px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('• Jump on blue platforms to stay alive', canvas.width / 2, 320);
+    ctx.fillText('• Avoid red obstacles and spikes - they kill you!', canvas.width / 2, 340);
+    ctx.fillText('• Collect yellow coins for bonus points', canvas.width / 2, 360);
+    ctx.fillText('• Green power-ups slow down obstacles', canvas.width / 2, 380);
+    ctx.fillText('• Purple power-ups give you double jump', canvas.width / 2, 400);
+    ctx.fillText('• Score increases as you survive longer', canvas.width / 2, 420);
+    
     // High score
     if (highScore > 0) {
         ctx.fillStyle = '#ffd700';
         ctx.font = 'bold 18px "Segoe UI", Arial, sans-serif';
-        ctx.fillText('Best Score: ' + highScore, canvas.width / 2, 270);
+        ctx.fillText('Best Score: ' + highScore, canvas.width / 2, 450);
     }
     
-    // Instructions
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    ctx.font = '16px "Segoe UI", Arial, sans-serif';
-    ctx.fillText('Press SPACE or CLICK to jump', canvas.width / 2, 310);
-    ctx.fillText('Press P to pause', canvas.width / 2, 330);
+    // Controls
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.font = '14px "Segoe UI", Arial, sans-serif';
+    ctx.fillText('CONTROLS: SPACE or CLICK to jump | P to pause', canvas.width / 2, 480);
     
     // Play button with gradient and glow
     const buttonX = 300;
-    const buttonY = 350;
+    const buttonY = 500;
     const buttonW = 200;
     const buttonH = 60;
     
